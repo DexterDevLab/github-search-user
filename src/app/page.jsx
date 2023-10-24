@@ -11,7 +11,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <Container maxW='container.lg'>
+    <Container maxW='container.lg' mb={10}>
       <NavBar />
       <Heading as='h1' textAlign='center'>
         Search users on Github

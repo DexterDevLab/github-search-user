@@ -19,7 +19,7 @@ const Search = ({ handleUserData, setLoading }) => {
     try {
       const res = await fetch(`https://api.github.com/users/${query}`);
       const data = await res.json();
-      console.log(data);
+
       if (data.message) {
         return toast({
           title: 'Error',
@@ -31,6 +31,7 @@ const Search = ({ handleUserData, setLoading }) => {
         });
       }
       handleUserData(data);
+      addUserSearchHistory(data, query);
     } catch (error) {
       toast({
         title: 'Error',
@@ -42,6 +43,24 @@ const Search = ({ handleUserData, setLoading }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const addUserSearchHistory = (userData, query) => {
+    const users = JSON.parse(localStorage.getItem('github-users')) || [];
+
+    const user = {
+      id: userData.id,
+      name: userData.name,
+      avatar: userData.avatar_url,
+    };
+
+    const isUserExist = users.find(user => user.id === userData.id);
+
+    if (isUserExist) {
+      users.splice(users.indexOf(isUserExist), 1);
+    }
+    users.unshift(user);
+    localStorage.setItem('github-users', JSON.stringify(users));
   };
 
   return (
